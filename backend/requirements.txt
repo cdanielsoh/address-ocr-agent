@@ -1,0 +1,11 @@
+fastapi
+uvicorn[standard]
+python-multipart
+boto3
+Pillow
+pydantic
+python-dotenv
+httpx
+requests-toolbelt
+strands-agents>=1.0.0
+strands-agents-tools
