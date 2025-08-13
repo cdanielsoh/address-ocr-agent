@@ -8,7 +8,6 @@ A React-based web application that extracts handwritten Korean addresses from im
 - **Backend**: Python FastAPI
 - **OCR Service**: Upstage Document OCR via SageMaker
 - **Confidence Analysis**: Strands Agents
-- **Infrastructure**: AWS CDK with Python, ALB/EC2 deployment
 
 ## Project Structure
 
@@ -28,11 +27,7 @@ textract-with-agent/
 │   │   └── models/         # Data models
 │   ├── requirements.txt
 │   └── .env
-└── infrastructure/          # AWS CDK infrastructure
-    ├── app.py              # CDK app entry point
-    ├── stacks/             # CDK stacks
-    ├── configs/            # Environment configs
-    └── requirements.txt
+└── infrastructure/          # AWS deployment files
 ```
 
 ## Development Setup
@@ -42,7 +37,6 @@ textract-with-agent/
 - Node.js 18+
 - Python 3.9+
 - AWS CLI configured
-- AWS CDK CLI
 
 ### Frontend Setup
 
@@ -112,27 +106,6 @@ python test_backend.py            # Interactive test with sample.jpeg
 - **Real Services Mode**: Test with actual AWS services
 - **Automatic Server Management**: Starts/stops FastAPI server for testing
 
-### Infrastructure Deployment
-
-```bash
-cd infrastructure
-
-# Create virtual environment
-python -m venv venv
-source venv/bin/activate
-
-# Install dependencies
-pip install -r requirements.txt
-
-# Bootstrap CDK (first time only)
-cdk bootstrap
-
-# Deploy development environment
-cdk deploy KoreanAddressApp-dev
-
-# Deploy production environment
-cdk deploy KoreanAddressApp-prod --context environment=prod
-```
 
 ## Environment Variables
 
@@ -254,30 +227,6 @@ The application processes Korean addresses in the standard format:
 예시: 서울특별시 성북구 화랑로 11길 26 103동 1602호 (하월곡동, OO아파트)
 ```
 
-## Deployment
-
-The application is designed to be deployed on AWS using:
-
-- **VPC**: Single AZ configuration for PoC
-- **ALB**: Internet-facing Application Load Balancer
-- **EC2**: Auto Scaling Group with t3.medium instances
-- **S3**: Bucket for temporary image storage
-- **IAM**: Roles with least privilege access
-
-### IAM Permissions
-
-The EC2 IAM role includes permissions for:
-- **SageMaker**: `InvokeEndpoint` for Upstage Document OCR
-- **S3**: Read/write access to image bucket
-- **Bedrock**: `InvokeModel` access to Claude 3.7 Sonnet in us-west-2
-- **Systems Manager**: EC2 instance management
-- **CloudWatch**: Logging and monitoring
-
-### Authentication
-
-- **No hardcoded credentials**: Uses EC2 IAM roles with STS for secure authentication
-- **Cross-region access**: SageMaker endpoints, Bedrock in us-west-2
-- **Automatic credential rotation**: Managed by AWS STS
 
 ## License
 
